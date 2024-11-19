@@ -118,18 +118,19 @@ def update_camera(ax, root, radius=1.5):
     ax.set_ylim3d([-radius / fact + root[1], radius / fact + root[1]])
 
 
-def render_animation(joints: np.ndarray, output: str = "notebook", title: str = "",
+def render_animation(joints: np.ndarray, ffmpeg_path, output: str = "notebook", title: str = "",
                      fps: float = 12.5,
                      # kinematic_tree: List[List[int]] = mmm_kinematic_tree,
                      colors: List[str] = mmm_colors,
                      figsize: Tuple[int] = (4, 4),
                      fontsize: int = 25,
-                     dataset_name: str = "HumanML3D"):
+                     dataset_name: str = "HumanML3D",
+                    ):
     import matplotlib.pyplot as plt
     from matplotlib.animation import FuncAnimation
     import matplotlib.patheffects as pe
     # plt.rcParams.update({'font.size': fontsize})
-    plt.rcParams['animation.ffmpeg_path'] ='C:\\Users\\ankur\\ffmpeg-master-latest-win64-gpl-shared\\ffmpeg-master-latest-win64-gpl-shared\\bin\\ffmpeg.exe'
+    plt.rcParams['animation.ffmpeg_path'] = ffmpeg_path
 
     # Z is gravity here
     x, y, z = 0, 1, 2

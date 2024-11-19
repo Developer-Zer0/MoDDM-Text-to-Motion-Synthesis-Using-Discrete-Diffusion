@@ -1,3 +1,6 @@
+
+ffmpeg_path: ${oc.env:FFMPEG_PATH}
+
 defaults:
   - _self_
   - datamodule: sample_datamodule.yaml

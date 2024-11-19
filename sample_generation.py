@@ -29,8 +29,8 @@ def main(cfg: DictConfig):
     generation_out = generator.generate(autoencoder, text)
     generation_out.features = generation_out.features.detach().cpu() * std + mean
     joints_np = generation_out.joints.cpu().numpy()[0]  # only one batch
-    render_animation(joints_np, title=text[0], output="generation.mp4", dataset_name="HumanML3D")
-    print("DONE!!")
+    render_animation(joints_np, ffmpeg_path=cfg.ffmpeg_path, title=text[0], output=f"generations/{'_'.join(text[0].split(' '))}.mp4", dataset_name="HumanML3D")
+    print(f"DONE!! Animation saved at generations/{'_'.join(text[0].split(' '))}.mp4")
 
 if __name__ == "__main__":
     main()

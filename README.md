@@ -19,8 +19,25 @@ python setup.py develop
 ```
 
 ## Perform single sample inference
+You need to setup FFMPEG for .mp4 generation. Follow instructions at https://www.ffmpeg.org/download.html
+After installation, add path to ffmpeg.exe (inside bin folder) in .env (Rename .env.example).
+
+API to run single sample inference using trained model on HumanML3D. Edit `sample_description.txt` to any text description of your choice. Inference **does not require GPU** and runs completely on CPU within 15 seconds. First run can take additional time to load CLIP. Run the following script and your human motion .mp4 will be stored in `generations/`.
+
+```bash
+python sample_generation.py
+```
+
+## Dataset
+TODO: Add instructions for downloading HumanML3D and KIT-ML datasets
+Default dataset will be the HumanML3D dataset. To use the KIT dataset add datamodule=kit-amass-rot.yaml
+
+## Train Stage 1 Vector Quantized Variational AutoEncoder (VQ-VAE)
 
 
+## Train Stage 2 Discrete Diffusion Model
+and 
+## Evaluate Model
 
 ## Training different baseline models
 Values for MODEL-CONFIG can be:
@@ -35,10 +52,6 @@ vq_diffusion.yaml
 ```bash
  python src/train.py --config-name=train model=MODEL-CONFIG model.do-evaluations=false trainer.devices=[1] trainer.max_epochs=500
  ```
-
-## Dataset
-TODO: Add instructions for downloading HumanML3D and KIT-ML datasets
-Default dataset will be the HumanML3D dataset. To use the KIT dataset add datamodule=kit-amass-rot.yaml
 
 
 ## Rendered animations

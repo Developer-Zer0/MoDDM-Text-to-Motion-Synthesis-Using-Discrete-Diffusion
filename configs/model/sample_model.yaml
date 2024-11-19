@@ -6,21 +6,18 @@ generator:
 autoencoder:
   _target_: src.models.networks.vq_vae_guo.VQVAEGuo
   transforms: ${datamodule.transforms}
-  checkpoint_path: finest.tar
-#  checkpoint_path: /home/ICT2000/achemburkar/Desktop/repos/TM2T/checkpoints/kit/VQVAEV3_CB1024_CMT_H1024_NRES3/model/finest.tar
+  checkpoint_path: checkpoints/autoencoder_finest.tar
 
 length_estimator:
   _target_: src.models.networks.guo_len_est.GuoLenEst
-  checkpoint_path: /home/ICT2000/achemburkar/Desktop/repos/text-to-motion/checkpoints/t2m/length_est_bigru/model/latest.tar
-#  checkpoint_path: /home/ICT2000/achemburkar/Desktop/repos/text-to-motion/checkpoints/kit/length_est_bigru/model/latest.tar
+  checkpoint_path: ''
 
 freeze_models_dict:
   generator: []
   autoencoder: [encoder, decoder, quant_conv, post_quant_conv, bottleneck_quantize]
   length_estimator: []
 
-checkpoint_paths: text_motion_ddiff_best.ckpt
-  # autoencoder: /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/logs/train/runs/2023-05-10_15-24-43/checkpoints/fid_best.ckpt
+checkpoint_paths: checkpoints/text_motion_ddiff_best.ckpt
 
 do_evaluation: false
 
@@ -29,8 +26,6 @@ devices: 'cpu'
 defaults:
   - /model/textencoder/clip_text_embedding@generator.textencoder
   - /model/motionencoder/diffusion_transformer@generator.diffusion_model
-#  - /model/motionencoder/resnet1d@autoencoder.encoder
-#  - /model/motiondecoder/resnet1d@autoencoder.decoder
   - /model/motionencoder/vq_encoder_v3_guo@autoencoder.encoder
   - /model/motiondecoder/vq_decoder_v3_guo@autoencoder.decoder
   - /model/motionencoder/quantizer_guo@autoencoder.quantizer
