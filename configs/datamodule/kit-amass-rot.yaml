@@ -1,0 +1,38 @@
+dataname: kit-amass-rot
+_target_: src.datamodules.kit_datamodule.KITDataModule
+
+# Paths
+#datasets: /datamodule/feng/datamodule/feng/Gestures
+datapath: ${paths.datasets}/kit
+splitpath: ${paths.datasets}/kit/kit-splits
+
+# Amass
+load_amass_data: true
+load_with_rot: true
+correspondance_path: ${paths.datasets}/kit/kitml_amass_path.json
+amass_path: ${paths.datasets}/AMASS/SMPL+H
+smplh_path: ${paths.smpl_path}
+#word_vectorize_path: ${paths.datasets}/Deps/TextMotionDeps/word_vectorizer
+
+# Text
+pick_one_text: true
+
+# Machine
+batch_size: 128
+num_workers: 0
+
+# Motion
+framerate: 12.5
+defaults:
+  - /datamodule/transforms/smpl.yaml@transforms
+  - sampler: fix_conseq
+
+# Other
+tiny: false
+progress_bar: true
+
+# Collate_fn
+collate_fn: ${model.collate_fn}
+
+# Word_vectorizer etc.
+deps: ${paths.deps}

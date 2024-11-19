@@ -1,0 +1,5 @@
+defaults:
+  - _self_
+  - datamodule: sample_datamodule.yaml
+  - model: sample_model.yaml
+  - paths: sample_paths.yaml

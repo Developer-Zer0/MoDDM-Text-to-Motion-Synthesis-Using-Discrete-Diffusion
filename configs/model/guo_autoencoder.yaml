@@ -1,0 +1,33 @@
+_target_: src.models.text_motion_model.TextMotionModel
+generator:
+  _target_: src.models.networks.guo_autoencoder.GuoAutoEncoder
+  transforms: ${datamodule.transforms}
+  vae: false
+
+losses:
+  _target_: src.models.metrics.loss.ComputeLosses
+  mode: smpl
+  loss_dict:
+    l1_m2m: 1.0
+    l_smooth: 1.0e-3
+    l_sparsity: 1.0e-3
+  loss_opts:
+    loss_feat_type: rfeats
+
+autoencoder_hidden_size: 384
+autoencoder_latent_size: 512
+droupout: 0.2
+activation: "LeakyReLU"
+
+collate_fn: collate_datastruct_and_text
+
+checkpoint_paths: ''
+
+lr_args:
+  gen_lr: 2e-4
+
+defaults:
+  - /model/motionencoder/conv_motion_snip_encoder@generator.motionencoder
+  - /model/motiondecoder/conv_snip_motion_decoder@generator.motiondecoder
+
+

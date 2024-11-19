@@ -1,0 +1,12 @@
+name: XYZTransform
+ename: xyz
+
+_target_: src.datamodules.datasets.transforms.xyz.XYZTransform
+
+normalization: false
+
+defaults:
+  - joints2jfeats: rifke
+
+joints2jfeats:
+  normalization: ${datamodule.transforms.normalization}

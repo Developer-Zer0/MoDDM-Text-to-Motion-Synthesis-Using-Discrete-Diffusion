@@ -1,0 +1,48 @@
+_target_: src.models.text_motion_model.TextMotionModel
+
+generator:
+  _target_: src.models.networks.vq_vae_net.VQModel
+  autoencoder_model_args:
+    n_embed: 1024
+    embed_dim: 64
+    remap:
+    quantizer_type: 'rq' # quantizer types: ['rq', 'vq', 'sq']
+    rq_residual_layers: 1 # only used when selecting quantizer type rq
+  autoencoder_z_channels: 64
+  transforms: ${datamodule.transforms}
+
+losses:
+  _target_: src.models.metrics.loss.ComputeLosses
+  mode: smpl
+  loss_dict:
+    mse_data: 1.0 # mse data loss weight
+    l_codebook: 0.036
+    #l_perplexity: 0.0
+    #l_entropy: 0.0
+  loss_opts:
+    loss_feat_type: rfeats
+
+# generator_loss_args:
+#   mse: 1.0 # mse data loss weight
+#   codebook: 0.036
+#   #perplexity: 0.0
+#   #entropy: 0.0
+
+lr_args:
+  gen_lr: 0.0005
+
+checkpoint_paths: /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/logs/train/runs/2023-03-08_13-44-20/checkpoints/last.ckpt
+
+do_evaluation: true
+
+collate_fn: collate_datastruct_and_text
+
+defaults:
+  - /model/motionencoder/resnet1d@generator.encoder
+  - /model/motiondecoder/resnet1d@generator.decoder
+
+  - /model/evaluator@evaluator
+
+# motion_opt: ${datamodule.motion_opt}
+# smpl_path: ${smpl_model_path}
+# renderer: ${datamodule.renderer}

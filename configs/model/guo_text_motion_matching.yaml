@@ -1,0 +1,75 @@
+# _target_: src.models.text_motion_model.TextMotionModel
+_target_: src.models.multistage_text_motion_model.MultistageTextMotionModel
+generator:
+  _target_: src.models.networks.guo_text_motion_matching.GuoTextMotionMatching
+  transforms: ${datamodule.transforms}
+  vae: true
+
+autoencoder:
+  _target_: src.models.networks.guo_autoencoder.GuoAutoEncoder
+  transforms: ${datamodule.transforms}
+  vae: true
+
+length_estimator:
+  _target_: src.models.networks.guo_len_est.GuoLenEst
+
+# losses:
+generator_losses:
+  _target_: src.models.metrics.loss.ComputeLosses
+  mode: smpl
+  loss_dict:
+    l_matching: 1.0
+  loss_opts:
+    loss_feat_type: rfeats
+
+#autoencoder_losses:
+#  _target_: src.models.metrics.loss.ComputeLosses
+#  mode: smpl
+#  loss_dict:
+#    l1_data: 1.0
+#  loss_opts:
+#    loss_feat_type: rfeats
+
+# Since no loss for length_estimator during multistage
+
+# length_estimator_losses:
+#   _target_: src.models.metrics.loss.ComputeLosses
+#   mode: smpl
+#   loss_dict:
+#     l1_data: 1.0
+#   loss_opts:
+#     loss_feat_type: rfeats
+
+freeze_models_dict:
+  generator: []
+  autoencoder: [motionencoder, motiondecoder]
+  length_estimator: [textencoder]
+
+checkpoint_paths: # /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/logs/train/runs/2022-11-01_14-32-48/checkpoints/last.ckpt
+  # have to change this hardcoded path
+  autoencoder: /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/logs/train/runs/2022-10-17_14-07-13/checkpoints/last.ckpt
+
+generator_text_size: 1024
+generator_input_size: 1024
+generator_hidden_size: 1024
+generator_latent_size: 512
+autoencoder_hidden_size: 384
+autoencoder_latent_size: 512
+droupout: 0.2
+activation: "LeakyReLU"
+
+lr_args:
+  gen_lr: 1e-4
+  auto_lr: 2e-5
+  len_est_lr: 2e-5
+
+collate_fn: collate_datastruct_and_text
+
+do_evaluation: false
+
+defaults:
+  - /model/textencoder/text_encoder_bi_gru_co@generator.textencoder
+  - /model/motionencoder/motion_encoder_bi_gru_co@generator.motion_encoder
+  - /model/motionencoder/conv_motion_snip_encoder@autoencoder.motionencoder
+  - /model/motiondecoder/conv_snip_motion_decoder@autoencoder.motiondecoder
+  - /model/textencoder/len_estimator_guo@length_estimator.textencoder

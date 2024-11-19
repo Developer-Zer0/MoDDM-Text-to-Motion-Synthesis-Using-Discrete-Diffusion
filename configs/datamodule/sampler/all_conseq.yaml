@@ -1,0 +1,10 @@
+_target_: src.datamodules.datasets.sampling.FrameSampler
+
+# For fix size datamodule
+request_frames: null
+sampling: conseq
+sampling_step: 1
+
+# For datamodule of any size
+max_len: 100000
+min_len: 1

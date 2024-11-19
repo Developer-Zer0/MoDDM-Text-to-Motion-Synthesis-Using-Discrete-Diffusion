@@ -1,0 +1,10 @@
+name: gru_generator_guo
+_target_: src.models.motiondecoder.gru_generator_guo.GRUGenerator
+
+vae: ${model.generator.vae}
+
+hidden_size: ${model.generator_hidden_size}
+input_size: 1152
+text_size: ${model.generator_text_size}
+output_size: 512
+activation: ${model.activation}

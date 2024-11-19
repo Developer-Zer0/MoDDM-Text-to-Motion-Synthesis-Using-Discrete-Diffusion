@@ -1,0 +1,33 @@
+_target_: src.models.text_motion_model.TextMotionModel
+generator:
+  _target_: src.models.networks.temos_net.TEMOSNet
+  transforms: ${datamodule.transforms}
+  vae: true
+
+losses:
+  _target_: src.models.metrics.loss.ComputeLosses
+  mode: smpl
+  loss_dict:
+    l1_data: 1.0
+    l1_m2m: 1.0
+    temos_kl: 1.0e-5
+    temos_latent: 1.0e-5
+  loss_opts:
+    loss_feat_type: rfeats
+
+latent_dim: 256
+ff_size: 1024
+num_layers: 6
+num_head: ${model.num_layers}
+droupout: 0.1
+activation: "gelu"
+
+lr_args:
+  gen_lr: 1e-4
+
+defaults:
+  - /model/textencoder/distilbert_actor@generator.textencoder
+  - /model/motionencoder/actor@generator.motionencoder
+  - /model/motiondecoder/actor@generator.motiondecoder
+
+

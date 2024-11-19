@@ -1,0 +1,8 @@
+name: SMPLH
+_target_: src.datamodules.datasets.transforms.rots2joints.SMPLH
+
+jointstype: mmm
+input_pose_rep: matrix
+path: ${paths.smpl_path}
+batch_size: 256 #${machine.smpl_batch_size}
+gender: neutral

@@ -1,0 +1,4 @@
+# dataset path
+datasets:  C:\Users\ankur\OneDrive\Desktop\Academics\TextMotionGenerator
+deps: ${paths.datasets}/Deps/TextMotionDeps
+smpl_path: C:\Users\ankur\OneDrive\Desktop\Academics\TextMotionGenerator\SMPL_Data\SMPL_Data\models\smplh

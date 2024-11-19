@@ -1,0 +1,6 @@
+name: Rifke
+_target_: src.datamodules.datasets.transforms.joints2jfeats.Rifke
+
+path: ${paths.deps}/transforms/joints2jfeats/rifke/${datamodule.dataname}
+normalization: false
+forward_filter: false

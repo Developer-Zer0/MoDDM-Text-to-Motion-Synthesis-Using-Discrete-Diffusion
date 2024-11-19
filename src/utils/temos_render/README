@@ -1,0 +1,10 @@
+# STEPS TO RENDER MOTION
+
+1) Generate motion results .npy using render_test_results in temp. Will have to run eval loop for that with batch size 1.
+
+2) Convert results.npy to vertices.npy using MDM repository. Change the path in repos/motion-diffusion-model/visualize/render_mesh to the folder containing results.npy.
+Then run: python -m visualize.render_mesh in MDM. vertices.npy will generate in the same folder.
+
+3) Use blender (in Downloads) in background with the render.py script in this directory:
+./blender --background --python /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/src/utils/temos_render/render.py
+By default vertices.npy files in temp/ folder will be converted to motions.

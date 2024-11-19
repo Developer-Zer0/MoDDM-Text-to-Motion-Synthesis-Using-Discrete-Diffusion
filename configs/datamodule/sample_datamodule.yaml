@@ -1,0 +1,26 @@
+dataname: humanml
+_target_: src.datamodules.humanml_datamodule.HumanMLDataModule
+
+datapath: ${paths.datasets}/HumanML3D
+splitpath: ${paths.datasets}/HumanML3D
+
+# Machine
+num_workers: 0
+
+# Motion
+framerate: 20
+joints_num: 22
+dim_pose: 263
+max_motion_length: 196
+feat_bias: 20      # Guo Layers of GRU
+defaults:
+  - /datamodule/transforms/humanml_smpl.yaml@transforms
+  - sampler: fix_conseq
+
+# Collate_fn
+collate_fn: ${model.collate_fn}
+
+# Word_vectorizer etc.
+deps: ${paths.deps}
+
+devices: 'cpu'

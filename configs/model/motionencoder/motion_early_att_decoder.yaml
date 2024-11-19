@@ -1,0 +1,7 @@
+name: motion_early_att_decoder
+_target_: src.models.motionencoder.motion_early_att_decoder.MotionEarlyAttDecoder
+
+n_mot_vocab: 1026 # codebook_size+3 = 1027 in Guo
+n_layers: 1
+init_hidden_size: 1024 # 512*2
+hidden_size: 1024

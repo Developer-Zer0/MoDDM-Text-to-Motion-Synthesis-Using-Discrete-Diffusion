@@ -1,0 +1,19 @@
+name: HumanMLSMPLTransform
+ename: smpl
+
+_target_: src.datamodules.datasets.transforms.HumanMLSMPLTransform
+
+normalization: false
+
+joints_num: ${datamodule.joints_num}
+
+defaults:
+  - rots2rfeats: smplvelp
+  - rots2joints: smplh
+  - joints2jfeats: rifke
+
+rots2rfeats:
+  normalization: ${datamodule.transforms.normalization}
+
+joints2jfeats:
+  normalization: ${datamodule.transforms.normalization}

@@ -1,0 +1,5 @@
+_target_: src.models.motionencoder.motion_encoder_bi_gru_co.MotionEncoderBiGRUCo
+
+input_size: 512
+hidden_size: 1024
+output_size: 512

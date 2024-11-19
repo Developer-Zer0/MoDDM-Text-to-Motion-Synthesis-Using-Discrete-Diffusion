@@ -1,0 +1,64 @@
+_target_: src.models.multistage_text_motion_model.MultistageTextMotionModel
+generator:
+  _target_: src.models.networks.vq_rnn.VQRNN
+  transforms: ${datamodule.transforms}
+
+autoencoder:
+  #Shuhong's
+#  _target_: src.models.networks.vq_vae_net.VQModel
+#  transforms: ${datamodule.transforms}
+#  autoencoder_model_args:
+#    n_embed: 1024
+#    embed_dim: 64
+#    remap:
+#    quantizer_type: 'rq'
+#    rq_residual_layers: 1
+#  autoencoder_z_channels: 64
+  #Guo's
+  _target_: src.models.networks.vq_vae_guo.VQVAEGuo
+  transforms: ${datamodule.transforms}
+  checkpoint_path: /home/ICT2000/achemburkar/Downloads/t2mt/t2m/VQVAEV3_CB1024_CMT_H1024_NRES3/model/finest.tar
+
+length_estimator:
+  _target_: src.models.networks.guo_len_est.GuoLenEst
+
+evaluator:
+  _target_: src.utils.evaluator.Evaluator
+
+generator_losses:
+  _target_: src.models.metrics.loss.ComputeLosses
+  mode: smpl
+  loss_dict:
+    l_rnn: 1.0
+  loss_opts:
+    loss_feat_type: rfeats
+
+freeze_models_dict:
+  generator: []
+  autoencoder: [encoder, decoder, quant_conv, post_quant_conv, bottleneck_quantize]
+  length_estimator: []
+
+checkpoint_paths: # /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/logs/train/runs/2023-03-14_12-13-14/checkpoints/last.ckpt
+  # have to change this hardcoded path
+  autoencoder: /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/logs/train/runs/2023-03-08_15-35-48/checkpoints/last.ckpt
+
+lr_args:
+  gen_lr: 1e-4
+  auto_lr: 0.0000
+  len_est_lr: 2e-5
+
+collate_fn: collate_datastruct_and_text
+
+do_evaluation: false
+
+defaults:
+  - /model/textencoder/bi_gru_guo@generator.textencoder
+  - /model/motionencoder/motion_early_att_decoder@generator.motionencoder
+#  - /model/motionencoder/resnet1d@autoencoder.encoder
+#  - /model/motiondecoder/resnet1d@autoencoder.decoder
+  - /model/motionencoder/vq_encoder_v3_guo@autoencoder.encoder
+  - /model/motiondecoder/vq_decoder_v3_guo@autoencoder.decoder
+  - /model/motionencoder/quantizer_guo@autoencoder.quantizer
+  - /model/textencoder/len_estimator_guo@length_estimator.textencoder
+
+  - /model/evaluator@evaluator

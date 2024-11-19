@@ -1,0 +1,8 @@
+name: SMPLVelP
+_target_: src.datamodules.datasets.transforms.rots2rfeats.SMPLVelP
+
+pose_rep: rot6d
+path: ${paths.deps}/transforms/rots2rfeats/smplvelp/${.pose_rep}/${datamodule.dataname}
+
+canonicalize: true
+normalization: false

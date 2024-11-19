@@ -1,0 +1,32 @@
+_target_: src.models.text_motion_model.TextMotionModel
+generator:
+  _target_: src.models.networks.guo_len_est.GuoLenEst
+  transforms: ${datamodule.transforms}
+  vae: true
+  checkpoint_path: /home/ICT2000/achemburkar/Desktop/repos/text-to-motion/checkpoints/t2m/length_est_bigru/model/latest.tar
+
+losses:
+  _target_: src.models.metrics.loss.ComputeLosses
+  mode: smpl
+  loss_dict:
+    len_crossentropy: 1.0
+  loss_opts:
+    loss_feat_type: rfeats
+
+# text_size: 1024
+# input_size: 1024
+# hidden_size: 1024
+# latent_size: 512
+# droupout: 0.2
+# activation: "LeakyReLU"
+
+lr_args:
+  gen_lr: 0   # 2e-4
+
+do_evaluation: false
+
+collate_fn: collate_datastruct_and_text
+
+defaults:
+  - /model/textencoder/len_estimator_guo@generator.textencoder
+  - /model/evaluator@evaluator

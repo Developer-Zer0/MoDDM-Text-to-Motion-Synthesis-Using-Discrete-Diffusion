@@ -1,0 +1,19 @@
+_target_: src.models.text_motion_model.TextMotionModel
+generator:
+  _target_: src.models.networks.embedding_net.JointEmbeddingNet
+  n_poses: ${datamodule.sampler.request_frames}
+  mode: random
+  input_mode: random
+
+losses:
+  _target_: src.models.metrics.loss.ComputeLosses
+  mode: smpl
+  loss_dict:
+    l1_data: 1.0
+  loss_opts:
+    loss_feat_type: rfeats
+
+lr_args:
+  gen_lr: 0.001
+
+

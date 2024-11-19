@@ -1,0 +1,9 @@
+name: conv_snip_motion_decoder
+_target_: src.models.motiondecoder.conv_snip_motion_decoder.ConvSnipMotionDecoder
+
+latent_size: 512
+vae: true
+
+hidden_size: 384
+droupout: 0.2
+activation: "LeakyReLU"
