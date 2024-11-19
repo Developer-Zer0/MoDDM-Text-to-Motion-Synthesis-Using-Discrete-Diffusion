@@ -3,7 +3,9 @@
 
 # SMPL
 SMPL_Data
+data/SMPL_Data/
 Deps
+data/Deps/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -163,3 +165,4 @@ outputs/
 logs/
 .env
 .autoenv
+temp/

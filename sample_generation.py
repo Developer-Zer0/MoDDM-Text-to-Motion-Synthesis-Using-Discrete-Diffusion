@@ -16,8 +16,8 @@ def main(cfg: DictConfig):
     with open("sample_description.txt", 'r') as t:
         text = t.readlines()
 
-    mean = np.load('mean.npy')
-    std = np.load('std.npy')
+    mean = np.load('misc/mean.npy')
+    std = np.load('misc/std.npy')
 
     model: LightningModule = hydra.utils.instantiate(cfg.model, nfeats=263, _recursive_=False)
 

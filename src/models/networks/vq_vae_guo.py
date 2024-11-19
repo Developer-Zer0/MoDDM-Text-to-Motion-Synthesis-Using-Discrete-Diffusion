@@ -16,10 +16,11 @@ class VQVAEGuo(pl.LightningModule):
         self.transforms = instantiate(transforms)
         self.Datastruct = self.transforms.Datastruct
 
-        checkpoint = torch.load(checkpoint_path, map_location=self.motionencoder.device)
-        self.motionencoder.load_state_dict(checkpoint['vq_encoder'])
-        self.motiondecoder.load_state_dict(checkpoint['vq_decoder'])
-        self.quantizer.load_state_dict(checkpoint['quantizer'])
+        if checkpoint_path != '':
+            checkpoint = torch.load(checkpoint_path, map_location=self.motionencoder.device)
+            self.motionencoder.load_state_dict(checkpoint['vq_encoder'])
+            self.motiondecoder.load_state_dict(checkpoint['vq_decoder'])
+            self.quantizer.load_state_dict(checkpoint['quantizer'])
 
     def forward(self, batch, do_inference=False):
 

@@ -1,26 +1,8 @@
 dataname: kit-ml
 _target_: src.datamodules.humanml_datamodule.HumanMLDataModule
 
-# Paths
-#datasets: /Desktop/repos/HumanML3D/HumanML3D/
-
-# Andrew: here we should try to use the config files (i.e. paths/default.yaml) to unified the location changes on different machines.
-# comment things for now.
-#datapath: /home/ICT2000/achemburkar/Desktop/repos/HumanML3D/HumanML3D
-#splitpath: /home/ICT2000/achemburkar/Desktop/repos/HumanML3D/HumanML3D
-
 datapath: ${paths.datasets}/Guo-KIT-ML/KIT-ML
 splitpath: ${paths.datasets}/Guo-KIT-ML/KIT-ML
-
-# Amass
-#load_amass_data: true
-#load_with_rot: true
-#correspondance_path: ${paths.datasets}/kit/kitml_amass_path.json
-#amass_path: ${paths.datasets}/AMASS/SMPL+H
-#smplh_path: ${paths.smpl_path}
-
-# Text
-#pick_one_text: true
 
 # Machine
 batch_size: ${batch_size}

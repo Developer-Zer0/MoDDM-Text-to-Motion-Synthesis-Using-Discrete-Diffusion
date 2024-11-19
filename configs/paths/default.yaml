@@ -13,6 +13,6 @@ work_dir: ${hydra:runtime.cwd}
 
 
 # dataset path
-datasets: /data/feng/Gestures
+datasets: data
 deps: ${paths.datasets}/Deps/TextMotionDeps
 smpl_path: ${paths.datasets}/SMPL_Data/models/smplh

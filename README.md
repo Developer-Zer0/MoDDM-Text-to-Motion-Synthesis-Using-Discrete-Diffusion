@@ -1,5 +1,7 @@
 ## Text-Motion Generator
 
+![alt text](assets/Architecture.png)
+
 Generating motions based on text descriptions. Analogy to text-to-image that generate new images from text. 
 
 ## Instructions to setup
@@ -19,24 +21,39 @@ python setup.py develop
 ```
 
 ## Perform single sample inference
-You need to setup FFMPEG for .mp4 generation. Follow instructions at https://www.ffmpeg.org/download.html
-After installation, add path to ffmpeg.exe (inside bin folder) in .env (Rename .env.example).
+API to run single sample inference using trained model on HumanML3D. Edit `sample_description.txt` to any text description of your choice. Inference **does not require GPU** and runs completely on CPU within 15 seconds. First run can take additional time to load CLIP.
 
-API to run single sample inference using trained model on HumanML3D. Edit `sample_description.txt` to any text description of your choice. Inference **does not require GPU** and runs completely on CPU within 15 seconds. First run can take additional time to load CLIP. Run the following script and your human motion .mp4 will be stored in `generations/`.
+1) You need to setup FFMPEG for .mp4 generation. Follow instructions at https://www.ffmpeg.org/download.html. After installation, add path to ffmpeg.exe (inside bin folder) in .env (Rename .env.example).
+
+2) Download autoencoder and discrete diffusion model checkpoints from ??TODO??. Store them under `checkpoints/` (Create if doesn't exist).
+
+3) You will also need to download SMPL_DATA and Deps for the human skeleton transformations and animations. They can be downloaded from ??TODO??. Extract them and store under `data/` (Create if doesn't exist) (`data/Deps`, `data/SMPL_DATA`).
+
+4) Run the following script and your human motion .mp4 will be stored in `generations/`.
 
 ```bash
 python sample_generation.py
 ```
 
 ## Dataset
-TODO: Add instructions for downloading HumanML3D and KIT-ML datasets
-Default dataset will be the HumanML3D dataset. To use the KIT dataset add datamodule=kit-amass-rot.yaml
+To get both HumanML3D and KIT-ML dataset, follow instructions at https://github.com/EricGuo5513/HumanML3D. Once downloaded, store at location `data/` (Create if doesn't exist). For training and evaluations, you will also need SMPL_DATA and Deps from Step 3 of single sample inference.
+Default dataset will be the HumanML3D dataset in all experiments. To use the KIT dataset add `datamodule=guo-kit-ml.yaml` as a parameter in command scripts.
 
 ## Train Stage 1 Vector Quantized Variational AutoEncoder (VQ-VAE)
 
+Train VQ-VAE reconstruction model on HumanML3D (or KIT-ML). This stage 1 training is required for stage 2 diffusion. Run the following script.
+
+```bash
+ python src/train.py --config-name=train model=vq_vae.yaml model.do_evaluation=false trainer.devices=[1] trainer.max_epochs=500
+ ```
+
+Setting `model.do_evaluation=True` will run the evaluator after every epoch to store FID, R-Precision. However, evaluator is a pre-trained model by the work at https://github.com/EricGuo5513/TM2T. You will need to download the pre-trained models from https://drive.google.com/file/d/1OXy2FBhXrswT6zE4SBSPpVfQhxmI8Zzy/view. For HumanML3D evaluator, you need the `t2m/text_mot_match/model/finest.tar`. Store it at `checkpoints/t2m/text_mot_match/model/finest.tar`.
+
+KIT-ML pre-trained models are from the above work as well and can be found at https://drive.google.com/file/d/1ied_KWvqXXsP2Gls-SvzjXIZtHHZ5zpi/view. For the KIT-ML evaluator, you need the `kit/text_mot_match/model/finest.tar`. Store is at `checkpoints/kit/text_mot_match/model/finest.tar`. Also include `eval_ckpt=checkpoints/kit/text_mot_match/model/finest.tar` as parameter in script.
+
 
 ## Train Stage 2 Discrete Diffusion Model
-and 
+
 ## Evaluate Model
 
 ## Training different baseline models
