@@ -15,13 +15,11 @@ autoencoder:
 #  autoencoder_z_channels: 64
   _target_: src.models.networks.vq_vae_guo.VQVAEGuo
   transforms: ${datamodule.transforms}
-  checkpoint_path: /home/ICT2000/achemburkar/Downloads/t2mt/t2m/VQVAEV3_CB1024_CMT_H1024_NRES3/model/finest.tar
-#  checkpoint_path: /home/ICT2000/achemburkar/Desktop/repos/TM2T/checkpoints/kit/VQVAEV3_CB1024_CMT_H1024_NRES3/model/finest.tar
+  checkpoint_path: ''
 
 length_estimator:
   _target_: src.models.networks.guo_len_est.GuoLenEst
-  checkpoint_path: /home/ICT2000/achemburkar/Desktop/repos/text-to-motion/checkpoints/t2m/length_est_bigru/model/latest.tar
-#  checkpoint_path: /home/ICT2000/achemburkar/Desktop/repos/text-to-motion/checkpoints/kit/length_est_bigru/model/latest.tar
+  checkpoint_path: ''
 
 evaluator:
   _target_: src.utils.evaluator.Evaluator
@@ -48,7 +46,7 @@ freeze_models_dict:
   length_estimator: []
 
 checkpoint_paths:
-  autoencoder: /home/ICT2000/achemburkar/Desktop/TextMotionGenerator/logs/train/runs/2023-05-10_15-24-43/checkpoints/fid_best.ckpt
+  autoencoder: checkpoints/autoencoder_trained.ckpt
 
 lr_args:
   gen_lr: 4e-3

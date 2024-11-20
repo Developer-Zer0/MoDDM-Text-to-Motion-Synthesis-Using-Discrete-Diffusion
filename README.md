@@ -1,4 +1,5 @@
-## Text-Motion Generator
+# MoDDM: Text-to-Motion Synthesis using Discrete Diffusion Model (BMVC 2023)
+## [[Paper]](https://papers.bmvc2023.org/0624.pdf) [[Poster]](https://bmvc2022.mpi-inf.mpg.de/BMVC2023/0624_poster.pdf) [[Video]](https://bmvc2022.mpi-inf.mpg.de/BMVC2023/0624_video.mp4) [[Supp]](https://bmvc2022.mpi-inf.mpg.de/BMVC2023/0624_supp.zip)
 
 ![alt text](assets/Architecture.png)
 
@@ -41,7 +42,9 @@ Default dataset will be the HumanML3D dataset in all experiments. To use the KIT
 
 ## Train Stage 1 Vector Quantized Variational AutoEncoder (VQ-VAE)
 
-Train VQ-VAE reconstruction model on HumanML3D (or KIT-ML). This stage 1 training is required for stage 2 diffusion. Run the following script.
+*You can skip this step by using an autoencoder checkpoint. If you want to skip, copy paste `autoencoder_finest.ckpt` in the same location and rename is to `autoencoder_trained.ckpt`.*
+
+Train VQ-VAE reconstruction model on HumanML3D (or KIT-ML). Run the following script. All the outputs and checkpoints will be stored in `logs/`.
 
 ```bash
  python src/train.py --config-name=train model=vq_vae.yaml model.do_evaluation=false trainer.devices=[1] trainer.max_epochs=500
@@ -51,7 +54,29 @@ Setting `model.do_evaluation=True` will run the evaluator after every epoch to s
 
 KIT-ML pre-trained models are from the above work as well and can be found at <a href='https://drive.google.com/file/d/1ied_KWvqXXsP2Gls-SvzjXIZtHHZ5zpi/view'>LINK</a>. For the KIT-ML evaluator, you need the `kit/text_mot_match/model/finest.tar`. Store is at `checkpoints/kit/text_mot_match/model/finest.tar`. Also include `eval_ckpt=checkpoints/kit/text_mot_match/model/finest.tar` as parameter in script.
 
-
 ## Train Stage 2 Discrete Diffusion Model
 
+Discrete Diffusion training on HumanML3D (or KIT-ML). Copy trained autoencoder checkpoint from above step and paste directly into `checkpoints/`. Rename .ckpt file to `autoencoder_trained.ckpt` so that stage 2 can load it. All the outputs and checkpoints will be stored in `logs/`. 3 checkpoints will be created corresponding to the epoch with best validation FID, best validation R-Precision and best validation loss. Run the following command.
+
+```bash
+ python src/train.py --config-name=train model=vq_diffusion.yaml model.do_evaluation=false trainer.devices=[1] trainer.max_epochs=500
+ ```
+
+Similar to stage 1 training, setting `model.do_evaluation=True` will run the evaluator after every epoch to store metrics. Follow above steps to download pre-trained models for HumanML3D (or KIT-ML)
+
+Set `logger=tensorboard` to get loss and metric plots across epochs.
+
+## Benchmark Results
+
+We compare our model to 4 methods: <a href='https://www.cs.utexas.edu/~huangqx/NeurIPS_ViGIL_Text2Animation.pdf'>Seq2Seq</a>, <a href='https://arxiv.org/abs/1907.01108'>Language2Pose</a>, <a href='https://arxiv.org/abs/2207.01696'>TM2T</a> and <a href='https://arxiv.org/abs/2209.14916'>Motion Diffusion Model (MDM)</a>. Seq2seq and Language2Pose are
+deterministic motion generation baselines. TM2T utilizes VQ-VAE and recurrent models for text-to-motion synthesis task. MDM uses a conditional diffusion model on raw motions that showed promising motion results.
+
+HumanML3D                  |  KIT-ML
+:-------------------------:|:-------------------------:
+![](assets/Humanml-results.png)  |  ![](assets/Kitml-results.png)
+
+![alt text](assets/qual-img.png)
+
 ## Synthesized Motions
+
+![alt text](assets/example-gifs.gif)

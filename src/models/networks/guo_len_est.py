@@ -11,9 +11,10 @@ class GuoLenEst(nn.Module):
         super().__init__()
         self.textencoder = instantiate(textencoder)
 
-        checkpoint = torch.load(checkpoint_path,
-                                map_location=self.textencoder.device)
-        self.textencoder.load_state_dict(checkpoint['estimator'])
+        if checkpoint_path != '':
+            checkpoint = torch.load(checkpoint_path,
+                                    map_location=self.textencoder.device)
+            self.textencoder.load_state_dict(checkpoint['estimator'])
     
     def forward(self, batch, do_inference = False):
         ret = self.text_encoder_forward(

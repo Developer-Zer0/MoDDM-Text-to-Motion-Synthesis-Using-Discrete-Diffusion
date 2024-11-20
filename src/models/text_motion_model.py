@@ -109,25 +109,13 @@ class TextMotionModel(BaseModel):
 
         compute_loss = self.losses[split]
         loss = compute_loss.update(outputs)
-        # if split == "val": # compute metrics for validation data
-        #     self.metrics.update(outputs)
         return loss
-
-    # To-do : Find out how to render results later
-    # def training_epoch_end(self, outputs: List[Any]):
-    #     # `outputs` is a list of dicts returned from `training_step()`
-    #     if self.current_epoch % 20 == 0 and self.global_rank == 0: # and self.trainer.root_gpu == 1:
-    #         self.rendering_sample_results(self.renderer)
 
     def allsplit_epoch_end(self, split: str, outputs):
         losses = self.losses[split]
         loss_dict = losses.compute()
         dico = {losses.loss2logname(loss, split): value.item()
                 for loss, value in loss_dict.items()}
-
-        # if split == "val":
-        #     metrics_dict = self.metrics.compute()
-        #     dico.update({f"Metrics/{metric}": value for metric, value in metrics_dict.items()})
 
         if self.do_evaluation and (split != 'train'):
             metrics = self.evaluator.evaluate_metrics(self.trainer.datamodule, self.generator)
@@ -137,7 +125,7 @@ class TextMotionModel(BaseModel):
         dico.update({"epoch": float(self.trainer.current_epoch),
                      "step": float(self.trainer.current_epoch)})
 
-        if split == 'val' and self.current_epoch % 10 == 0:
+        if split == 'val' and self.current_epoch % 10 == 0 and self.render_animations:
             self.render_sample_results()
 
         self.log_dict(dico)
@@ -157,9 +145,6 @@ class TextMotionModel(BaseModel):
         return out_opts, []
 
     def render_sample_results(self):
-
-        if not self.render_animations:
-            return
         
         self.generator.eval()
         # output to current logging dir
@@ -184,15 +169,13 @@ class TextMotionModel(BaseModel):
             text = 'No Title'
         except KeyError:
             joints_np = inference_output['pred_data'].joints.cpu().numpy()[0] # only one batch
-            # x_t_joints_np = inference_output['x_t'].joints.cpu().numpy()[0] # only one batch
-            # output_of_x_t_joints_np = inference_output['output_of_x_t'].joints.cpu().numpy()[0] # only one batch
 
             text = sample_data_batch['text'][0]['caption']
         og_joints_np = inference_output['gt_data'].joints.cpu().numpy()[0] # only one batch
 
         output_video_file = os.path.join(
             output_dir, 'epoch%d_synthesis.mp4' % self.current_epoch
-            )  # get subset of audio track
+            )
 
         if sample_dataset.nfeats == 263:
             dataset_name = 'HumanML3D'
@@ -201,21 +184,9 @@ class TextMotionModel(BaseModel):
 
         render_animation(joints_np, title = text, output = output_video_file, dataset_name=dataset_name)
 
-        # output_video_file = os.path.join(
-        #     output_dir, 'epoch%d_x_t.mp4' % self.current_epoch
-        #     )  # get subset of audio track
-
-        # render_animation(x_t_joints_np, title = text, output = output_video_file)
-        
-        # output_video_file = os.path.join(
-        #     output_dir, 'epoch%d_output_of_x_t.mp4' % self.current_epoch
-        #     )  # get subset of audio track
-
-        # render_animation(output_of_x_t_joints_np, title = text, output = output_video_file)
-
         og_output_video_file = os.path.join(
             output_dir, 'epoch%d_original.mp4' % self.current_epoch
-            )  # get subset of audio track
+            )
 
         render_animation(og_joints_np, title = text, output = og_output_video_file, dataset_name=dataset_name)
 

@@ -246,7 +246,7 @@ class MultistageTextMotionModel(BaseModel):
             total_dico.update({f"Metrics/{metric}-{split}": value for metric, value in metrics.items()})
             self.evaluator.reset()
 
-        if split == 'val' and self.current_epoch % 100 == 0:
+        if split == 'val' and self.current_epoch % 100 == 0 and self.render_animations:
             self.render_sample_results()
 
         self.log_dict(total_dico)
@@ -266,9 +266,6 @@ class MultistageTextMotionModel(BaseModel):
         return opt_gen, opt_auto, opt_len_est
 
     def render_sample_results(self):
-
-        if not self.render_animations:
-            return
 
         self.generator.eval()
         # output to current logging dir
