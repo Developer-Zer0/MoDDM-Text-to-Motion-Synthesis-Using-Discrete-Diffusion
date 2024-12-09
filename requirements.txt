@@ -40,7 +40,7 @@ google-auth==2.9.1
 google-auth-oauthlib==0.4.6
 greenlet==1.1.2
 grpcio==1.47.0
-huggingface-hub==0.8.1
+huggingface-hub==0.26.5
 human-body-prior==0.8.5.0
 hydra-colorlog==1.2.0
 hydra-core==1.2.0
